@@ -1,5 +1,4 @@
 const mongoose = require('@south-paw/koa-mongoose')
-const goodreads = require('goodreads-api-node')
 const models = require('../models')
 
 const {
@@ -7,8 +6,7 @@ const {
   DB_PORT,
   DB_USER,
   DB_PASSWORD,
-  GOODREADS_API_KEY,
-  GOODREADS_API_SECRET } = process.env
+  GOOGLE_BOOKS_API } = process.env
 
 module.exports = {
   db: mongoose({
@@ -23,8 +21,5 @@ module.exports = {
     },
     schemas: models
   }),
-  goodreads: goodreads({
-    key: GOODREADS_API_KEY,
-    secret: GOODREADS_API_SECRET
-  })
+  GOOGLE_BOOKS_API
 }

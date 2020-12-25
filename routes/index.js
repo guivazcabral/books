@@ -1,6 +1,5 @@
 const Router = require('@koa/router')
 const router = new Router()
-const { goodreads } = require('../database')
 
 router.get('/books', async (ctx, next) => {
   const Books = ctx.model('Books')
@@ -43,20 +42,16 @@ router.get('/books/:id', async (ctx, next) => {
 })
 
 router.post('/books/:isbn', async (ctx, next) => {
-  const { params } = ctx
+  const { params, request } = ctx
   const Books = ctx.model('Books')
   const existingBook = await Books.findOne({ isbn: params.isbn })
 
   if (!existingBook) {
-    const results = await goodreads.searchBooks({ q: params.isbn, field: 'isbn' })
     try {
-      const book = results.search.results.work.best_book
       ctx.body = await Books.create({
-        title: book.title,
+        title: request.body.title,
         isbn: params.isbn,
-        author: book.author.name,
-        goodreadsId: book.id['_'],
-        image: book.image_url
+        author: request.body.author,
       })
     } catch (err) {
       ctx.status = err.status || 500
